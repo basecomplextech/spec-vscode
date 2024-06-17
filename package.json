@@ -1,0 +1,25 @@
+{
+  "name": "spec-vscode",
+  "displayName": "Spec",
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "spec",
+      "aliases": ["Spec", "spec"],
+      "extensions": [".spec"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "spec",
+      "scopeName": "source.spec",
+      "path": "./syntaxes/spec.tmLanguage.json"
+    }]
+  }
+}
