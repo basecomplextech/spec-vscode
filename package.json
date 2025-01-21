@@ -10,16 +10,28 @@
     "Programming Languages"
   ],
   "contributes": {
-    "languages": [{
-      "id": "spec",
-      "aliases": ["Spec", "spec"],
-      "extensions": [".spec"],
-      "configuration": "./language-configuration.json"
-    }],
-    "grammars": [{
-      "language": "spec",
-      "scopeName": "source.spec",
-      "path": "./syntaxes/spec.tmLanguage.json"
-    }]
+    "languages": [
+      {
+        "id": "spec",
+        "aliases": [
+          "Spec",
+          "spec"
+        ],
+        "extensions": [
+          ".spec"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "spec",
+        "scopeName": "source.spec",
+        "path": "./syntaxes/spec.tmLanguage.json"
+      }
+    ]
+  },
+  "__metadata": {
+    "size": 40215
   }
 }
