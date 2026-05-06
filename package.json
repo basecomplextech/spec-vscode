@@ -1,6 +1,6 @@
 {
-  "name": "spec-vscode",
-  "displayName": "Spec",
+  "name": "baseproto-vscode",
+  "displayName": "BaseProto",
   "description": "",
   "version": "0.0.1",
   "engines": {
@@ -12,22 +12,22 @@
   "contributes": {
     "languages": [
       {
-        "id": "spec",
+        "id": "baseproto",
         "aliases": [
-          "Spec",
-          "spec"
+          "BaseProto",
+          "baseproto"
         ],
         "extensions": [
-          ".spec"
+          ".bproto"
         ],
         "configuration": "./language-configuration.json"
       }
     ],
     "grammars": [
       {
-        "language": "spec",
-        "scopeName": "source.spec",
-        "path": "./syntaxes/spec.tmLanguage.json"
+        "language": "baseproto",
+        "scopeName": "source.bproto",
+        "path": "./syntaxes/bproto.tmLanguage.json"
       }
     ]
   },

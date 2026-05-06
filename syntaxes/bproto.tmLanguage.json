@@ -1,0 +1,91 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "baseProto",
+	"patterns": [
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#number"
+		},
+		{
+			"include": "#comment"
+		},
+		{
+			"include": "#string"
+		},
+		{
+			"include": "#tag"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [
+				{
+					"name": "keyword.control.bproto",
+					"match": "\\b(enum|message|oneway|struct|service|subservice|index|table|type|sequence|sequences|queue|stream|const)\\b"
+				},
+				{
+					"name": "entity.name.type",
+					"match": "\\b(any|bool|byte|int16|int32|int64|uint16|uint32|uint64|float64|float64|bin64|bin128|bin256|array|list|bytes|string|timestamp|true|false)\\b\\??"
+				},
+				{
+					"name": "constant.character",
+					"match": "\\#"
+				},
+				{
+					"name": "constant.character",
+					"match": "\\b(import|option|options|package|module)\\b"
+				},
+				{
+					"captures": {
+						"1": {
+							"name": "entity.name.type"
+						},
+						"2": {
+							"name": "keyword.control.bproto"
+						},
+						"4": {
+							"name": "keyword.control.bproto"
+						}
+					},
+					"match": "\\b([a-zA-Z0-9_\\.]*?):? ([a-zA-Z0-9_\\.]*)\\s?(<([a-zA-Z0-9_\\.]*)>)? {"
+				},
+				{
+					"name": "entity.other.attribute-name",
+					"match": "^(    )(    )*[a-zA-Z0-9_]*\\b:? "
+				},
+				{
+					"name": "entity.other.attribute-name",
+					"match": "^(\t)(\t)*[a-zA-Z0-9_]*\\b:? "
+				}
+			]
+		},
+		"comment": {
+			"name": "comment.line.double-slash.bproto",
+			"begin": "//",
+			"end": "$"
+		},
+		"number": {
+			"name": "constant.numeric.bproto",
+			"match": "\\b[0-9]+\\b"
+		},
+		"string": {
+			"name": "string.quoted.double.bproto",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.bproto",
+					"match": "\\\\."
+				}
+			]
+		},
+		"tag": {
+			"name": "entity.name.tag",
+			"begin": "`",
+			"end": "`"
+		}
+	},
+	"scopeName": "source.bproto"
+}
