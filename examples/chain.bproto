@@ -1,0 +1,25 @@
+# module pchain
+#
+# import pclock
+# import pcollect
+# import pcontainer
+#
+# option go_package "github.com/basecomplextech/complexdb/proto/pchain"
+
+State message {
+    block   int64       `tag: 1`
+    conts   Containers  `tag: 2`
+    txs     Txs         `tag: 3`
+
+    compacted_at    pclock.HLTimestamp  `tag: 100`
+}
+
+Containers message {
+    block   int64                   `tag: 1`
+    conts   []pcontainer.Container  `tag: 2`
+}
+
+Txs message {
+    block   int64           `tag: 1`
+    txs     pcollect.Map    `tag: 2`
+}

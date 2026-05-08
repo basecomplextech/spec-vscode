@@ -1,0 +1,58 @@
+services: {
+    node0: {
+        build:   .
+        command: --address=node0:10070 run
+        tty:     true
+
+        ports: [
+            10070:10070
+            10432:10432
+        ]
+        volumes: [
+            ./bin:/app/bin
+            ./config:/app/config
+            ./var/node0:/app/var
+        ]
+        environment: [
+            TERM=xterm-256color
+        ]
+    }
+
+    node1: {
+        build:   .
+        command: --address=node1:10070 run
+        tty:     true
+
+        ports: [
+            11070:10070
+            11432:10432
+        ]
+        volumes: [
+            ./bin:/app/bin
+            ./config:/app/config
+            ./var/node1:/app/var
+        ]
+        environment: [
+            TERM=xterm-256color
+        ]
+    }
+
+    node2: {
+        build:   .
+        command: --address=node2:10070 run
+        tty:     true
+
+        ports: [
+            12070:10070
+            12432:10432
+        ]
+        volumes: [
+            ./bin:/app/bin
+            ./config:/app/config
+            ./var/node2:/app/var
+        ]
+        environment: [
+            TERM=xterm-256color
+        ]
+    }
+}

@@ -1,0 +1,126 @@
+# module types
+#
+# import users/user
+# import users/types
+#
+# option go_package "hello,world"
+
+Catalog subservice {
+    // Blockchain returns a blockchain node.
+    blockchain {
+        output pblock.Node
+    }
+
+    // Leader
+    
+    // Leader returns the current leader, or waits for one.
+    leader {
+        in  {wait bool}
+        out {leader pblock.NodeLoc; ok bool}
+    }
+
+    // Leaders returns a channel with leaders, starting with the current leader.
+    // The channel sends empty locs when leaders are lost.
+    leaders {
+        out_chan pblock.NodeLoc
+    }
+
+    // Nodes
+
+    // Node returns a node info by id, or false if not found.
+    node {
+        in  {node_id bin64}
+        out {node pcatalog.Node; ok bool}
+    }
+
+    // NodeAddr returns a node address, or false if not found.
+    node_addr {
+        in  {node_id bin64}
+        out {addr string; ok bool}
+    }
+
+    // RegisterNode registers a new node, or updates an existing one.
+    register_node {
+        in  {input pcatalog.NodeInput}
+        out {node pcatalog.Node}
+    }
+
+    // StreamNodeStatus receives and updates node status.
+    stream_node_status {
+        in {node_id bin64}
+        out_chan pcatalog.NodeStatus
+    }
+
+    // Shards
+
+    // Shard returns a shard by id, or false if not found.
+    shard {
+        in  {shard_id bin64}
+        out {shard pcatalog.Shard; ok bool}
+    }
+
+    // ShardReplica returns a shard replica by id, or false if not found.
+    shard_replica {
+        in  {replica_id bin128}
+        out {replica pcatalog.ShardReplica; ok bool}
+    }
+
+    // ShardReplicasByShard returns a list of shard replicas by shard id.
+    shard_replicas_by_shard {
+        in  {shard_id bin64}
+        out {replicas []pcatalog.ShardReplica}
+    }
+}
+
+// ShardReplica is a tree shard member.
+ShardReplica subservice {
+    // Blockchain returns a blockchain node.
+    blockchain {
+        out {node pblock.Node}
+    }
+
+    // Leader
+
+    // Leader returns the current leader, or waits for one.
+    leader {
+        in  {wait bool}
+        out {leader pblock.NodeLoc; ok bool}
+    }
+
+    // Leaders returns a channel with leaders, starting with the current leader.
+    // The channel sends empty locs when leaders are lost.
+    leaders {
+        out_chan pblock.NodeLoc
+    }
+
+    // Forks
+
+    // BeginFork returns a new shard fork, the fork must be committed or rolled back.
+    // The method awaits the provided meta revision.
+    begin_fork {
+        in  {input ShardReplicaForkInput}
+        out {ShardReplicaFork}
+    }
+
+    // ContinueFork continues an existing fork.
+    continue_fork {
+        in  {fork_id bin128}
+        out {ShardReplicaFork}
+    }
+
+    // CommitFork commits a fork.
+    commit_fork {
+        in  {fork_id bin128}
+        out {ok bool}
+    }
+
+    // DiscardFork discards a fork.
+    discard_fork {
+        in {fork_id bin128}
+    }
+
+    // DiscardForkNowait discards a fork, does not wait for a response.
+    discard_fork_nowait oneway {
+        in {fork_id bin128}
+    }
+}

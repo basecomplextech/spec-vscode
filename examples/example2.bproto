@@ -1,0 +1,142 @@
+# module types
+#
+# import users/user
+# import users/types
+#
+# option go_package "database"
+
+users: table {
+    columns: {
+        id:         int64       `tag 1; key; sequence users_id_seq`
+        email:      string      `tag 2`
+        name:       string      `tag 3`
+        created_at: timestamp   `tag 10`
+        updated_at: timestamp   `tag 11`
+    }
+}
+
+users: table {
+    columns: {
+        id:          int64       `key; sequence id_seq`
+        email:       string
+        name:        string
+        group_id:    int64       `references groups.id`
+        project_id:  int64       `references projects.id`
+        created_at:  timestamp
+        updated_at:  timestamp
+    }
+
+    indexes: {
+        email_uniq: {
+            unique:  true
+            columns: [email]
+        }
+    }
+
+    sequences: {
+        id_seq: {
+            partitions: 128
+        }
+    }
+}
+
+users1: table {
+    key: [
+        id `sequence id_seq`
+    ]
+    value: {
+        id:          int64
+        email:       string
+        name:        string
+        created_at:  timestamp
+        updated_at:  timestamp
+    }
+
+    fkeys: {
+        group_id:    groups.id   `on_delete cascade`
+        project_id:  projects.id `on_delete cascade`
+    }
+
+    indexes: {
+        email_uniq: {
+            unique:  true
+            columns: [email]
+        }
+    }
+}
+
+// Indexes
+
+users_email_ix: index {
+    table:   users
+    unique:  true
+    columns: [email]
+}
+
+users_created_ix: index {
+    table:   users
+    unique:  true
+    columns: {
+        created_at: `order asc; nulls last`
+    }
+}
+
+ticket_project_date_ix: index {
+    table: tickets
+    columns: [
+        project_id: `order asc; nulls first`
+        created_at: `order desc`
+    ]
+    include: [name; group_id]
+}
+
+// Queues
+
+users_email_queue: queue {
+    key:   id
+    value: UserEmail
+}
+
+users_events: stream {
+    key:   user_id
+    value: UserEvent
+}
+
+// Types
+
+Gender: enum {
+    UNDEFINED:   0
+    MALE:        1 `name "male"`
+    FEMALE:      2 `name "female"`
+    OTHER:       3 `name "other"`
+}
+
+UserEventType: enum<uint16> {
+    UNDEFINED:   0
+    CREATED:     1
+    UPDATED:     2
+    DELETED:     3
+}
+
+User: message {
+    id:          bin128      `tag 1`
+    name:        string      `tag 2`
+    email:       string      `tag 3`
+    gender:      Gender      `tag 4`
+    created_at:  timestamp   `tag 10`
+    updated_at:  timestamp   `tag 11`
+}
+
+UserEmail: message {
+    id:          bin128
+    user_id:     bin128
+    email:       string
+    text:        string
+    created_at:  timestamp
+}
+
+UserEvent: message {
+    type:     UserEventType
+    user_id:  bin128
+    user:     User
+}

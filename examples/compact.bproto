@@ -1,0 +1,94 @@
+# module types
+#
+# import bloom
+#
+# option go_package "hello,world"
+
+File file {
+    head    FileHead
+    bloom   bloom.Filter
+    meta    heap<Block>
+    data    heap<BlockData>
+}
+
+FileHead signed_box64 {
+	version byte
+
+	blocks uint64
+	values uint64
+
+	count  int64
+	height int32
+
+	min_key bytes
+	max_key bytes
+}
+
+// Blocks
+
+BlockKind enum {
+	unknown 0
+	item    1
+	branch  2
+)
+
+Block message {
+	id     bin256
+	kind   BlockKind
+	item   ItemBlock
+	branch BranchBlock
+}
+
+ItemBlock message {
+	items    items
+	versions VersionBlock
+}
+
+BranchBlock message {
+	items branches
+
+	// set by init
+	blocks   Blocks
+	versions VersionBlocks
+}
+
+// Items
+
+Item struct {
+	key         bytes
+	version_num uint32 // number of values
+	version_end uint64 // version list end offset
+}
+ 
+
+// Table
+
+Table message {
+    key pdatatypes.Type `tag 1`
+    
+    mem_start_block     int64 `tag 10`
+    mem_executed_block  int64 `tag 11`
+    
+    file_executed_block int64 			`tag 20`
+    file_queue          TableFile		`tag 21`
+    file_tree           TableFileTree	`tag 22`
+}
+
+// Files
+
+TableFile message {
+    id      bin128  `tag 1`
+    blob_id bin256  `tag 2`
+    items   int64   `tag 3`
+    size    int64   `tag 4`
+
+    hll_id  bin256  `tag 10` // HyperLogLog blob id if exists, points to a blob with phll.HLL
+}
+
+TableFileTree message {
+    levels  list<TableFileTreeRow>`tag 1`
+}
+
+TableFileTreeRow message {
+    files   list<TableFile>	`tag 1`
+}
